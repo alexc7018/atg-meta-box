@@ -10,7 +10,7 @@ class ATG_Meta_Box {
 	/**
 	 * Version number
 	 */
-	const VERSION = '1.0';
+	const VERSION = '0.1-alpha';
 
 	/**
 	 * Prefix used for meta keys, array keys, input IDs and names
