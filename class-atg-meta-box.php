@@ -422,9 +422,16 @@ class ATG_Meta_Box {
 			$sanitized_values[$field['id']] = $sanitized_value;
 
 			// See function comment for explanation of why this is here
-			if ( $this->_field_should_be_updated( $field, $sanitized_value ) ) {
+			if ( $this->_field_should_be_updated( $post_id, $field, $sanitized_value ) ) {
 				// Shazam!
-				update_post_meta( $post_id, '_' . $field_name, $sanitized_value );
+				if ( is_array( $sanitized_value ) ) {
+					delete_post_meta( $post_id, '_' . $field_name );
+					foreach ( $sanitized_value as $value ) {
+						add_post_meta( $post_id, '_' . $field_name, $value );
+					}
+				} else {
+					update_post_meta( $post_id, '_' . $field_name, $sanitized_value );
+				}
 			}
 		}
 
@@ -438,12 +445,13 @@ class ATG_Meta_Box {
 	 * store the data differently (like putting multiple fields in one
 	 * meta entry, or splitting up arrays into multiple meta entries).
 	 *
+	 * @param int   $post_id
 	 * @param array $field
 	 * @param mixed $sanitized_value
 	 * @return bool
 	 */
-	private function _field_should_be_updated( $field, $sanitized_value ) {
-		return apply_filters( 'atg_update_field', true, $field, $sanitized_value );
+	private function _field_should_be_updated( $post_id, $field, $sanitized_value ) {
+		return apply_filters( 'atg_update_field', true, $post_id, $field, $sanitized_value );
 	}
 }
 
