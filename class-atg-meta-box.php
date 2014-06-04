@@ -128,7 +128,7 @@ class ATG_Meta_Box {
 
 		foreach ( $this->fields as $field ) {
 			$field_meta_id  = '_' . $this->prefix . '_' . $field['id'];
-			$field['value'] = get_post_meta( $post->ID, $field_meta_id, true );
+			$field['value'] = in_array( $field['type'], array( 'checkboxes', 'select') ) ? get_post_meta( $post->ID, $field_meta_id, false ) : get_post_meta( $post->ID, $field_meta_id, true );
 			echo $this->_get_field_html( $field );
 		}
 	}
