@@ -38,6 +38,22 @@ class ATG_Meta_Box {
 	 * Title displayed for the meta box on the edit screen
 	 */
 	private $title;
+	
+	/**
+	 * Optional. The context within the screen where the boxes
+	 * should display. Available contexts vary from screen to
+	 * screen. Post edit screen contexts include 'normal', 'side',
+	 * and 'advanced'. Comments screen contexts include 'normal'
+	 * and 'side'. Menus meta boxes (accordion sections) all use
+	 * the 'side' context. Global default is 'advanced'.
+	 */
+	private $context = 'advanced';
+	
+	/**
+	 * Optional. The priority within the context where the boxes
+	 * should show ('high', 'low'). Default 'default'.
+	 */
+	private $priority = 'default';
 
 	/**
 	 * Constructor
@@ -46,10 +62,18 @@ class ATG_Meta_Box {
 		if ( ! isset( $args['post_types'], $args['fields'], $args['title'] ) ) {
 			return;
 		}
+		
+		$args = wp_parse_args( $args, array(
+			'context' => $this->context,
+			'priority' => $this->priority,
+		) );
+		
 		$this->id         = $id;
 		$this->post_types = $args['post_types'];
 		$this->fields     = $args['fields'];
 		$this->title      = $args['title'];
+		$this->context    = $args['context'];
+		$this->priority   = $args['priority'];
 
 		if ( isset( $args['prefix'] ) ) {
 			$this->prefix = $args['prefix'];
@@ -112,8 +136,8 @@ class ATG_Meta_Box {
 				$this->title,
 				array( $this, 'render_meta_box_content' ),
 				$post_type,
-				'advanced',
-				'high'
+				$this->context,
+				$this->priority
 			);
 		}
 	}
